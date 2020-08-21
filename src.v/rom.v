@@ -1,8 +1,8 @@
 module rom(
     read,
-    ena
+    ena,
     addr,
-    data,
+    data
 );
 
 input read;

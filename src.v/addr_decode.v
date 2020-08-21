@@ -5,8 +5,8 @@ module addr_decode(
 );
 
 input [12:0]addr;
-output rom_sel;
-output ram_sel;
+output reg rom_sel;
+output reg ram_sel;
 
 always@(addr)
     casex(addr)

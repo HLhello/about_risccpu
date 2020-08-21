@@ -26,6 +26,19 @@ output [2:0]opcode;
 output [12:0]ir_addr;
 output [12:0]pc_addr;
 
+wire fetch;
+wire alu_ena;
+wire load_ir;
+wire load_acc;
+wire [7:0]alu_out;
+wire [7:0]accum;
+wire zero;
+wire load_pc;
+wire data_ena;
+wire contr_ena;
+wire inc_pc;
+wire control_ena;
+
 clk_gen clk_gen(
     .clk(clk),
     .rst(rst),
@@ -45,7 +58,7 @@ acc_sum acc_sum(
     .clk(clk),
     .rst(rst),
     .ena(load_acc),
-    .data(data),
+    .data(alu_out),
     .accum(accum)
 );
 
@@ -92,7 +105,7 @@ machine machine(
     .ena(contr_ena),
     .zero(zero),
     .opcode(opcode),
-    .datactrl_ena,
+    .datactrl_ena(data_ena),
     .halt(halt),
     .inc_pc(inc_pc),
     .rd(rd),
