@@ -15,4 +15,3 @@ reg [7:0]xmemory[13'h1fff:0];
 assign data = (read && ena) ? xmemory[addr] : 8'hzz;
 
 endmodule 
-
