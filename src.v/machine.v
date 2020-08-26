@@ -3,7 +3,7 @@ module machine(
     ena,
     zero,
     opcode,
-    datactrl_ena,
+    data_ena,
     halt,
     inc_pc,
     rd,
@@ -26,7 +26,7 @@ input clk;
 input ena;
 input zero;
 input [2:0]opcode;
-output reg datactrl_ena;
+output reg data_ena;
 output reg halt;
 output reg inc_pc;
 output reg rd, wr;
@@ -41,7 +41,7 @@ always@(negedge clk)
         begin
             state <= 3'b000;
             {inc_pc, load_acc, load_pc, rd}   <= 4'b0000;
-            {wr, load_ir, datactrl_ena, halt} <= 4'b0000;
+            {wr, load_ir, data_ena, halt} <= 4'b0000;
         end
     else 
         ctrl_cycle;
@@ -52,29 +52,29 @@ task ctrl_cycle;
             3'b000: begin //load high 8bits instruction 
                         state <= 3'b001;
                         {inc_pc, load_acc, load_pc, rd}   <= 4'b0001;
-                        {wr, load_ir, datactrl_ena, halt} <= 4'b0100;
+                        {wr, load_ir, data_ena, halt} <= 4'b0100;
                     end
             3'b001: begin //pc increased by one then load low 8bits instruction 
                         state <= 3'b010;
                         {inc_pc, load_acc, load_pc, rd}   <= 4'b1001;
-                        {wr, load_ir, datactrl_ena, halt} <= 4'b0100;
+                        {wr, load_ir, data_ena, halt} <= 4'b0100;
                     end
             3'b010: begin //idle
                         state <= 3'b011;
                         {inc_pc, load_acc, load_pc, rd}   <= 4'b0000;
-                        {wr, load_ir, datactrl_ena, halt} <= 4'b0000;
+                        {wr, load_ir, data_ena, halt} <= 4'b0000;
                     end
             3'b011: begin //next instruction address setup
                         state <= 3'b100;
                         if(opcode == HLT)
                             begin 
                                 {inc_pc, load_acc, load_pc, rd}   <= 4'b1000;
-                                {wr, load_ir, datactrl_ena, halt} <= 4'b0001;
+                                {wr, load_ir, data_ena, halt} <= 4'b0001;
                             end
                         else 
                             begin 
                                 {inc_pc, load_acc, load_pc, rd}   <= 4'b1000;
-                                {wr, load_ir, datactrl_ena, halt} <= 4'b0000;
+                                {wr, load_ir, data_ena, halt} <= 4'b0000;
                             end
                     end
             3'b100: begin //fetch oprand
@@ -82,22 +82,22 @@ task ctrl_cycle;
                         if(opcode == JMP)
                             begin 
                                 {inc_pc, load_acc, load_pc, rd}   <= 4'b0010;
-                                {wr, load_ir, datactrl_ena, halt} <= 4'b0000;
+                                {wr, load_ir, data_ena, halt} <= 4'b0000;
                             end
                         else if(opcode == ADD || opcode == AND || opcode == XOR || opcode == LDA)
                             begin 
                                 {inc_pc, load_acc, load_pc, rd}   <= 4'b0001;
-                                {wr, load_ir, datactrl_ena, halt} <= 4'b0000;
+                                {wr, load_ir, data_ena, halt} <= 4'b0000;
                             end
                         else if(opcode == STO)
                             begin 
                                 {inc_pc, load_acc, load_pc, rd}   <= 4'b0000;
-                                {wr, load_ir, datactrl_ena, halt} <= 4'b0010;
+                                {wr, load_ir, data_ena, halt} <= 4'b0010;
                             end
                         else 
                             begin 
                                 {inc_pc, load_acc, load_pc, rd}   <= 4'b0000;
-                                {wr, load_ir, datactrl_ena, halt} <= 4'b0000;
+                                {wr, load_ir, data_ena, halt} <= 4'b0000;
                             end
                     end
             3'b101: begin //operation 
@@ -105,27 +105,27 @@ task ctrl_cycle;
                         if(opcode == ADD || opcode == AND || opcode == XOR || opcode == LDA)
                             begin 
                                 {inc_pc, load_acc, load_pc, rd}   <= 4'b0101;
-                                {wr, load_ir, datactrl_ena, halt} <= 4'b0000;
+                                {wr, load_ir, data_ena, halt} <= 4'b0000;
                             end
                         else if(opcode == SKZ && zero == 1'b1)
                             begin 
                                 {inc_pc, load_acc, load_pc, rd}   <= 4'b1000;
-                                {wr, load_ir, datactrl_ena, halt} <= 4'b0000;
+                                {wr, load_ir, data_ena, halt} <= 4'b0000;
                             end
                         else if(opcode == JMP)
                             begin 
                                 {inc_pc, load_acc, load_pc, rd}   <= 4'b1010;
-                                {wr, load_ir, datactrl_ena, halt} <= 4'b0000;
+                                {wr, load_ir, data_ena, halt} <= 4'b0000;
                             end
                         else if(opcode == STO)
                             begin 
                                 {inc_pc, load_acc, load_pc, rd}   <= 4'b0000;
-                                {wr, load_ir, datactrl_ena, halt} <= 4'b1010;
+                                {wr, load_ir, data_ena, halt} <= 4'b1010;
                             end
                         else 
                             begin 
                                 {inc_pc, load_acc, load_pc, rd}   <= 4'b0000;
-                                {wr, load_ir, datactrl_ena, halt} <= 4'b0000;
+                                {wr, load_ir, data_ena, halt} <= 4'b0000;
                             end
                     end
             3'b110: begin 
@@ -133,17 +133,17 @@ task ctrl_cycle;
                         if(opcode == STO)
                             begin 
                                 {inc_pc, load_acc, load_pc, rd}   <= 4'b0000;
-                                {wr, load_ir, datactrl_ena, halt} <= 4'b0010;
+                                {wr, load_ir, data_ena, halt} <= 4'b0010;
                             end
                         else if(opcode == ADD || opcode == AND || opcode == XOR || opcode == LDA)
                             begin 
                                 {inc_pc, load_acc, load_pc, rd}   <= 4'b0001;
-                                {wr, load_ir, datactrl_ena, halt} <= 4'b0000;
+                                {wr, load_ir, data_ena, halt} <= 4'b0000;
                             end
                         else 
                             begin 
                                 {inc_pc, load_acc, load_pc, rd}   <= 4'b0000;
-                                {wr, load_ir, datactrl_ena, halt} <= 4'b0000;
+                                {wr, load_ir, data_ena, halt} <= 4'b0000;
                             end
                     end
             3'b111: begin 
@@ -151,18 +151,18 @@ task ctrl_cycle;
                         if(opcode == SKZ && zero == 1'b1)
                             begin 
                                 {inc_pc, load_acc, load_pc, rd}   <= 4'b1000;
-                                {wr, load_ir, datactrl_ena, halt} <= 4'b0000;
+                                {wr, load_ir, data_ena, halt} <= 4'b0000;
                             end
                         else 
                             begin 
                                 {inc_pc, load_acc, load_pc, rd}   <= 4'b0000;
-                                {wr, load_ir, datactrl_ena, halt} <= 4'b0000;
+                                {wr, load_ir, data_ena, halt} <= 4'b0000;
                             end
                     end
            default: begin 
                         state <= 3'b000;
                         {inc_pc, load_acc, load_pc, rd}   <= 4'b0000;
-                        {wr, load_ir, datactrl_ena, halt} <= 4'b0000;
+                        {wr, load_ir, data_ena, halt} <= 4'b0000;
                     end
         endcase 
     end

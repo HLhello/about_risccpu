@@ -37,7 +37,6 @@ wire load_pc;
 wire data_ena;
 wire contr_ena;
 wire inc_pc;
-wire control_ena;
 
 clk_gen clk_gen(
     .clk(clk),
@@ -64,7 +63,7 @@ acc_sum acc_sum(
 
 alu alu(
     .clk(clk),
-    .alu_ena(alu_ena),
+    .ena(alu_ena),
     .opcode(opcode),
     .accum(accum),
     .data(data),
@@ -73,7 +72,7 @@ alu alu(
 );
 
 data_ctrl data_ctrl(
-    .data_ena(data_ena),
+    .ena(data_ena),
     .data_in(alu_out),
     .data(data)
 );
@@ -97,7 +96,7 @@ machine_ctrl machine_ctrl(
     .clk(clk),
     .rst(rst),
     .fetch(fetch),
-    .ena(control_ena)
+    .ena(contr_ena)
 );
 
 machine machine(
@@ -105,7 +104,7 @@ machine machine(
     .ena(contr_ena),
     .zero(zero),
     .opcode(opcode),
-    .datactrl_ena(data_ena),
+    .data_ena(data_ena),
     .halt(halt),
     .inc_pc(inc_pc),
     .rd(rd),

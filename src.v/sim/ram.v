@@ -6,18 +6,18 @@ module ram(
     write
 );
 
-input addr;
+input [9:0]addr;
 input ena;
 input read;
 input write;
 
-inout data;
+inout [7:0]data;
 
-reg [7:0]xram[10'h3ff:0];
+reg [7:0]ram[10'h3ff:0];
 
-assign data = (read && ena) ? xram[addr] : 8'hzz;
+assign data = (read && ena) ? ram[addr] : 8'hzz;
 
 always@(posedge write)
-    xram[addr]  <= data;
+    ram[addr]  <= data;
     
 endmodule

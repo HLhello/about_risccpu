@@ -1,7 +1,6 @@
-`timescale 1ms/1ns
 module alu(
     clk,
-    alu_ena,
+    ena,
     opcode,
     accum,
     data,
@@ -29,8 +28,8 @@ parameter   HLT = 8'b000,
             XOR = 8'b100;
 
 input clk;
-input alu_ena;
-input [7:0]opcode;
+input ena;
+input [2:0]opcode;
 input [7:0]accum;
 input [7:0]data;
 output zero;
@@ -39,7 +38,7 @@ output reg [7:0]alu_out;
 assign zero = !accum;
 
 always@(posedge clk)
-    if(alu_ena)
+    if(ena)
         begin
             casex(opcode)
                 HLT: alu_out <= accum;
